@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book Review Analysis</title>
+</head>
+<body>
+<h1>Book Reviews</h1>
+<div>
+    <button onclick="window.location.href='/export/excel'">Export to Excel</button>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>Book Title</th>
+        <th>Review Text</th>
+        <th>Sentiment</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="review : ${reviews}">
+        <td th:text="${review.bookTitle}"></td>
+        <td th:text="${review.reviewText}"></td>
+        <td th:text="${review.sentiment}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
