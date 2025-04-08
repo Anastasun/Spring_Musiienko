@@ -1,28 +1,65 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <title>Book Review Analysis</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musiienko App</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<h1>Book Reviews</h1>
+<h1>💻 Welcome to Musiienko Search))</h1>
+
 <div>
-    <button onclick="window.location.href='/export/excel'">Export to Excel</button>
+    <h2>💵 Check USD Exchange Rate</h2>
+    <button id="get-dollar-rate">Show Current Dollar Rate</button>
+    <p id="dollar-rate"></p>
 </div>
-<table>
-    <thead>
-    <tr>
-        <th>Book Title</th>
-        <th>Review Text</th>
-        <th>Sentiment</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="review : ${reviews}">
-        <td th:text="${review.bookTitle}"></td>
-        <td th:text="${review.reviewText}"></td>
-        <td th:text="${review.sentiment}"></td>
-    </tr>
-    </tbody>
-</table>
+
+<hr>
+
+<div>
+    <h2>🔍 Search Items on eBay</h2>
+    <input type="text" id="ebay-search-query" placeholder="Type a product name...">
+    <button id="parse-ebay">Search</button>
+    <ul id="ebay-items"></ul>
+</div>
+
+<hr>
+
+<div>
+    <h2>📄 Export Results to Excel</h2>
+    <input type="text" id="excel-search-query" placeholder="Enter product to export...">
+    <button id="download-excel">Download Excel File</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#get-dollar-rate').click(function() {
+            $.get('/get-dollar-rate', function(data) {
+                $('#dollar-rate').text(data);
+            });
+        });
+
+        $('#parse-ebay').click(function() {
+            const searchQuery = $('#ebay-search-query').val();
+            $.get('/parse-ebay', { searchQuery: searchQuery }, function(data) {
+                $('#ebay-items').empty();
+                if (data.length === 0) {
+                    $('#ebay-items').append('<li>No items found</li>');
+                } else {
+                    data.forEach(function(item) {
+                        $('#ebay-items').append('<li>' + item.title + ' – ' + item.price + '</li>');
+                    });
+                }
+            });
+        });
+
+        $('#download-excel').click(function() {
+            const searchQuery = $('#excel-search-query').val();
+            window.location.href = '/download-excel?searchQuery=' + searchQuery;
+        });
+    });
+</script>
 </body>
 </html>
